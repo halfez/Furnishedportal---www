@@ -1031,8 +1031,9 @@ function Pricing({ cycle, onCycleChange }) {
           </div>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 1100, margin: '0 auto' }}>
-          <PriceCard tier={PRICING.free} annual={annual} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 820, margin: '0 auto' }}>
+          {/* Hidden pre-launch — re-enable when free tier is ready */}
+          {/* <PriceCard tier={PRICING.free} annual={annual} /> */}
           <PriceCard tier={PRICING.host} annual={annual} />
           <PriceCard tier={PRICING.portfolio} annual={annual} />
         </div>
