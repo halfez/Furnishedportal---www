@@ -258,6 +258,22 @@ const STEPS = [
   { n: '4', title: 'Your site goes live', body: 'Visitors can interact, see availability, apply, sign leases, and pay rent, etc. all in one place' },
 ];
 
+// Stripe Payment Links — TEST MODE.
+// Created 2026-04-25. Replace with live links (https://buy.stripe.com/... not /test_)
+// when ready to take real money.
+// Annual links not used yet — pricing is monthly-only. Buttons fall back to #pricing.
+const STRIPE_LINKS = {
+  hostMonthly:        'https://buy.stripe.com/test_6oU28s14w5wg6RL48O7Re01',
+  hostAnnual:         'TODO_HOST_ANNUAL',
+  portfolioMonthly:   'https://buy.stripe.com/test_7sY00kfZqbUEcc56gW7Re02',
+  portfolioAnnual:    'TODO_PORTFOLIO_ANNUAL',
+  // Founding cohort: 50% off for 12 months (FOUNDING50 coupon), setup fee waived.
+  // The ?prefilled_promo_code=FOUNDING50 parameter auto-applies the discount
+  // at Stripe Checkout — no action needed from the customer.
+  foundingHost:       'https://buy.stripe.com/test_9B69AUdRiaQAgslgVA7Re03?prefilled_promo_code=FOUNDING50',
+  foundingPortfolio:  'https://buy.stripe.com/test_eVq4gA28A9Mwfoh8p47Re04?prefilled_promo_code=FOUNDING50',
+};
+
 const PRICING = {
   free: {
     name: 'Free',
@@ -277,6 +293,8 @@ const PRICING = {
     name: 'Host',
     monthly: 49, annual: 490, annualMonthly: 40,
     setup: 199,
+    monthlyUrl: STRIPE_LINKS.hostMonthly,
+    annualUrl:  STRIPE_LINKS.hostAnnual,
     blurb: 'Your branded site on your own domain. For hosts with a single property.',
     features: [
       'Custom domain',
@@ -292,6 +310,8 @@ const PRICING = {
     name: 'Portfolio',
     monthly: 99, annual: 990, annualMonthly: 82,
     setup: 199,
+    monthlyUrl: STRIPE_LINKS.portfolioMonthly,
+    annualUrl:  STRIPE_LINKS.portfolioAnnual,
     blurb: 'Everything in Host, for hosts managing multiple properties.',
     features: [
       'Everything in Host',
@@ -321,25 +341,24 @@ const FOUNDING = {
       name: 'Host · Founding',
       base: 'Host',
       yr1: 24.50,
-      yr2: 36.75,
       full: 49,
       highlight: false,
       cta: 'Claim a Host spot',
+      url: STRIPE_LINKS.foundingHost,
     },
     {
       name: 'Portfolio · Founding',
       base: 'Portfolio',
       yr1: 49.50,
-      yr2: 74.25,
       full: 99,
       highlight: true,
       cta: 'Claim a Portfolio spot',
+      url: STRIPE_LINKS.foundingPortfolio,
     },
   ],
   perks: [
     { icon: '✦', text: '$199 setup fee waived entirely' },
     { icon: '✦', text: '50% off for your first 12 months' },
-    { icon: '✦', text: '25% off for months 13–36' },
     { icon: '✦', text: 'Direct line to the founder' },
     { icon: '✦', text: 'Shape the product roadmap' },
   ],
@@ -1093,16 +1112,29 @@ function PriceCard({ tier, annual }) {
         ))}
       </ul>
 
-      <button style={{
-        width: '100%', padding: '10px 20px',
-        background: h ? 'white' : 'var(--accent)',
-        color: h ? 'var(--accent-pressed)' : 'white',
-        borderRadius: 'var(--radius-sm)',
-        fontSize: 14, fontWeight: 600,
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        border: 0,
-        boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.08)',
-      }}>{tier.cta} <IconArrow size={14} /></button>
+      {(() => {
+        const url = annual ? tier.annualUrl : tier.monthlyUrl;
+        const ready = url && !url.startsWith('TODO_');
+        return (
+          <a
+            href={ready ? url : '#pricing'}
+            target={ready ? '_blank' : undefined}
+            rel={ready ? 'noopener noreferrer' : undefined}
+            style={{
+              width: '100%', padding: '10px 20px',
+              background: h ? 'white' : 'var(--accent)',
+              color: h ? 'var(--accent-pressed)' : 'white',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: 14, fontWeight: 600,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              border: 0,
+              boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.08)',
+              textDecoration: 'none',
+              boxSizing: 'border-box',
+            }}
+          >{tier.cta} <IconArrow size={14} /></a>
+        );
+      })()}
     </div>
   );
 }
@@ -1234,7 +1266,7 @@ function FinalCTA() {
               backdropFilter: 'blur(20px)',
             }}>Start the intake form</a>
             <div style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
-              afshin@furnishedportal.com
+              support@furnishedportal.com
             </div>
           </div>
         </div>
@@ -1376,7 +1408,7 @@ function FoundingCohort() {
                     <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>/mo · year 1</span>
                   </div>
                   <div style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
-                    ${t.yr2}/mo · years 2–3 &nbsp;·&nbsp; then ${t.full}/mo list price
+                    then ${t.full}/mo list price after year 1
                   </div>
                   <div style={{
                     display: 'inline-block', marginTop: 8,
@@ -1404,15 +1436,27 @@ function FoundingCohort() {
                   ))}
                 </ul>
 
-                <button style={{
-                  width: '100%', padding: '11px 20px',
-                  background: t.highlight ? 'white' : 'rgba(255,255,255,0.12)',
-                  color: t.highlight ? 'var(--accent-pressed)' : 'white',
-                  border: t.highlight ? 0 : '1px solid rgba(255,255,255,0.22)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: 14, fontWeight: 600,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                }}>{t.cta} <IconArrow size={14} /></button>
+                {(() => {
+                  const ready = t.url && !t.url.startsWith('TODO_');
+                  return (
+                    <a
+                      href={ready ? t.url : '#founding'}
+                      target={ready ? '_blank' : undefined}
+                      rel={ready ? 'noopener noreferrer' : undefined}
+                      style={{
+                        width: '100%', padding: '11px 20px',
+                        background: t.highlight ? 'white' : 'rgba(255,255,255,0.12)',
+                        color: t.highlight ? 'var(--accent-pressed)' : 'white',
+                        border: t.highlight ? 0 : '1px solid rgba(255,255,255,0.22)',
+                        borderRadius: 'var(--radius-sm)',
+                        fontSize: 14, fontWeight: 600,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                        textDecoration: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    >{t.cta} <IconArrow size={14} /></a>
+                  );
+                })()}
               </div>
             </Reveal>
           ))}
@@ -1494,13 +1538,13 @@ Pricing: Self-serve is $499 setup + $49/mo ($470/yr annual, 20% off). Done-for-y
 
 Founder: Afshin, a midterm rental host himself, based in Austin TX. Built for his own properties first. FurnishedPortal complements Furnished Finder — hosts still use FF to find leads, then send applicants to their FurnishedPortal site to apply and sign.
 
-Tone: warm, personal, confident. Short replies — 2 to 4 sentences max. If unknown, offer afshin@furnishedportal.com.`;
+Tone: warm, personal, confident. Short replies — 2 to 4 sentences max. If unknown, offer support@furnishedportal.com.`;
 
     try {
       const reply = await window.claude.complete({ messages: [{ role: 'user', content: ctx + "\n\n---\n\nUser asks: " + q }] });
       setMessages([...next, { from: 'bot', text: reply }]);
     } catch {
-      setMessages([...next, { from: 'bot', text: "Sorry, I'm having trouble connecting. Reach Afshin at afshin@furnishedportal.com." }]);
+      setMessages([...next, { from: 'bot', text: "Sorry, I'm having trouble connecting. Email us at support@furnishedportal.com." }]);
     } finally {
       setLoading(false);
     }
