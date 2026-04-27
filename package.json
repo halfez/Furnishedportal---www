@@ -1,0 +1,13 @@
+{
+  "name": "furnishedportal-www",
+  "private": true,
+  "version": "0.1.0",
+  "description": "furnishedportal.com — static landing page + Stripe-webhook serverless function on Vercel.",
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "stripe": "^16.12.0",
+    "resend": "^4.0.0"
+  }
+}
