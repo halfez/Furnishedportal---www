@@ -267,12 +267,14 @@ const STRIPE_LINKS = {
   portfolioMonthly:   'https://buy.stripe.com/7sY00kfZqbUEcc56gW7Re02',
   portfolioAnnual:    'TODO_PORTFOLIO_ANNUAL',
   // Founding cohort: 50% off for 12 months (FOUNDING50 coupon), setup fee waived.
-  // The ?prefilled_promo_code=FOUNDING50 parameter auto-applies the discount
-  // at Stripe Checkout — no action needed from the customer.
-  // Promotion Code is capped at 25 redemptions; once hit, the URL still loads
-  // but Checkout will mark FOUNDING50 invalid and the customer pays full price.
-  foundingHost:       'https://buy.stripe.com/9B69AUdRiaQAgslgVA7Re03?prefilled_promo_code=FOUNDING50',
-  foundingPortfolio:  'https://buy.stripe.com/eVq4gA28A9Mwfoh8p47Re04?prefilled_promo_code=FOUNDING50',
+  // No ?prefilled_promo_code= query param — that mechanism is buggy on Stripe's
+  // side (validates on page load before the customer enters an address, fails
+  // with "Something went wrong"). Customers manually enter FOUNDING50 at
+  // checkout instead. The code hint is shown directly under the CTA button.
+  // Coupon is capped at 25 redemptions on Stripe's side; after that the code
+  // simply stops applying and the customer pays full price.
+  foundingHost:       'https://buy.stripe.com/9B69AUdRiaQAgslgVA7Re03',
+  foundingPortfolio:  'https://buy.stripe.com/eVq4gA28A9Mwfoh8p47Re04',
 };
 
 const PRICING = {
@@ -1458,6 +1460,20 @@ function FoundingCohort() {
                     >{t.cta} <IconArrow size={14} /></a>
                   );
                 })()}
+                <div style={{
+                  marginTop: 10, fontSize: 12, color: 'rgba(255,255,255,0.62)',
+                  textAlign: 'center', lineHeight: 1.4,
+                }}>
+                  At checkout, enter code{' '}
+                  <span style={{
+                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                    fontWeight: 700, color: 'white',
+                    background: 'rgba(245,166,35,0.18)',
+                    padding: '1px 6px', borderRadius: 4,
+                    letterSpacing: '0.04em',
+                  }}>FOUNDING50</span>
+                  {' '}to unlock 50% off
+                </div>
               </div>
             </Reveal>
           ))}
