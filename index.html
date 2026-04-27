@@ -258,20 +258,21 @@ const STEPS = [
   { n: '4', title: 'Your site goes live', body: 'Visitors can interact, see availability, apply, sign leases, and pay rent, etc. all in one place' },
 ];
 
-// Stripe Payment Links — TEST MODE.
-// Created 2026-04-25. Replace with live links (https://buy.stripe.com/... not /test_)
-// when ready to take real money.
+// Stripe Payment Links — LIVE MODE.
+// Cut over from test to live on 2026-04-27. These take real money.
 // Annual links not used yet — pricing is monthly-only. Buttons fall back to #pricing.
 const STRIPE_LINKS = {
-  hostMonthly:        'https://buy.stripe.com/test_6oU28s14w5wg6RL48O7Re01',
+  hostMonthly:        'https://buy.stripe.com/6oU28s14w5wg6RL48O7Re01',
   hostAnnual:         'TODO_HOST_ANNUAL',
-  portfolioMonthly:   'https://buy.stripe.com/test_7sY00kfZqbUEcc56gW7Re02',
+  portfolioMonthly:   'https://buy.stripe.com/7sY00kfZqbUEcc56gW7Re02',
   portfolioAnnual:    'TODO_PORTFOLIO_ANNUAL',
   // Founding cohort: 50% off for 12 months (FOUNDING50 coupon), setup fee waived.
   // The ?prefilled_promo_code=FOUNDING50 parameter auto-applies the discount
   // at Stripe Checkout — no action needed from the customer.
-  foundingHost:       'https://buy.stripe.com/test_9B69AUdRiaQAgslgVA7Re03?prefilled_promo_code=FOUNDING50',
-  foundingPortfolio:  'https://buy.stripe.com/test_eVq4gA28A9Mwfoh8p47Re04?prefilled_promo_code=FOUNDING50',
+  // Promotion Code is capped at 25 redemptions; once hit, the URL still loads
+  // but Checkout will mark FOUNDING50 invalid and the customer pays full price.
+  foundingHost:       'https://buy.stripe.com/9B69AUdRiaQAgslgVA7Re03?prefilled_promo_code=FOUNDING50',
+  foundingPortfolio:  'https://buy.stripe.com/eVq4gA28A9Mwfoh8p47Re04?prefilled_promo_code=FOUNDING50',
 };
 
 const PRICING = {
