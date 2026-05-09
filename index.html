@@ -262,19 +262,17 @@ const STEPS = [
 // Cut over from test to live on 2026-04-27. These take real money.
 // Annual links not used yet — pricing is monthly-only. Buttons fall back to #pricing.
 const STRIPE_LINKS = {
-  hostMonthly:        'https://buy.stripe.com/6oU28s14w5wg6RL48O7Re01',
+  // Host Monthly: $49/mo + $499 one-time setup. allow_promotion_codes=true.
+  // Created 2026-05-09 to replace the prior $199-setup link.
+  hostMonthly:        'https://buy.stripe.com/28EeVe14w3o8ekd20G7Re05',
   hostAnnual:         'TODO_HOST_ANNUAL',
-  portfolioMonthly:   'https://buy.stripe.com/7sY00kfZqbUEcc56gW7Re02',
-  portfolioAnnual:    'TODO_PORTFOLIO_ANNUAL',
-  // Founding cohort: 50% off for 12 months (FOUNDING50 coupon), setup fee waived.
-  // No ?prefilled_promo_code= query param — that mechanism is buggy on Stripe's
-  // side (validates on page load before the customer enters an address, fails
-  // with "Something went wrong"). Customers manually enter FOUNDING50 at
-  // checkout instead. The code hint is shown directly under the CTA button.
-  // Coupon is capped at 25 redemptions on Stripe's side; after that the code
-  // simply stops applying and the customer pays full price.
-  foundingHost:       'https://buy.stripe.com/9B69AUdRiaQAgslgVA7Re03',
-  foundingPortfolio:  'https://buy.stripe.com/eVq4gA28A9Mwfoh8p47Re04',
+  // Founding Host: $49/mo + $499 setup, with FOUNDING50 prefilled — the 50% off
+  // applies to BOTH line items, so the customer pays $24.50/mo for 12 months
+  // and $249.50 setup once. After month 12 the monthly returns to $49.
+  // If prefill fails, allow_promotion_codes=true on the link lets the customer
+  // type FOUNDING50 at checkout. Coupon and promo code both capped at 10
+  // redemptions on Stripe's side (recreated 2026-05-09 from prior 25-cap).
+  foundingHost:       'https://buy.stripe.com/dRmfZi14wf6Q0tnbBg7Re07?prefilled_promo_code=FOUNDING50',
 };
 
 const PRICING = {
@@ -295,39 +293,25 @@ const PRICING = {
   host: {
     name: 'Host',
     monthly: 49, annual: 490, annualMonthly: 40,
-    setup: 199,
+    setup: 499,
     monthlyUrl: STRIPE_LINKS.hostMonthly,
     annualUrl:  STRIPE_LINKS.hostAnnual,
-    blurb: 'Your branded site on your own domain. For hosts with a single property.',
+    blurb: 'Your branded site on your own domain. One flat price, list as many units as you want.',
     features: [
-      'Custom domain',
+      'Custom domain or furnishedportal subdomain',
       'All full features',
       'Tenant portal',
       'Lease signing',
       'Stripe payments',
-      '1 property',
+      'Unlimited properties',
     ],
-    cta: 'Start with Host', highlight: true,
-  },
-  portfolio: {
-    name: 'Portfolio',
-    monthly: 99, annual: 990, annualMonthly: 82,
-    setup: 199,
-    monthlyUrl: STRIPE_LINKS.portfolioMonthly,
-    annualUrl:  STRIPE_LINKS.portfolioAnnual,
-    blurb: 'Everything in Host, for hosts managing multiple properties.',
-    features: [
-      'Everything in Host',
-      'Up to 5 properties',
-      'Priority support',
-    ],
-    cta: 'Start with Portfolio', highlight: false,
+    cta: 'Get started', highlight: true,
   },
 };
 
 const FAQS = [
   { q: 'Do I have to leave Furnished Finder?', a: "No — most hosts keep using FF for lead generation and send applicants to their FurnishedPortal site to apply, sign, and pay." },
-  { q: 'How long does it take to launch?', a: "Self-serve: same day once your intake form is in. Done-for-you: 48 hours from our kickoff call to a live site." },
+  { q: 'How long does it take to launch?', a: "About 48 hours from when your intake form comes in to a live site." },
   { q: 'Can I list multiple units?', a: "Yes. One site, unlimited units. Each unit gets its own listing, availability, rent, and amenity list." },
   { q: 'Who writes the lease?', a: "We generate it from your configured terms and the applicant's data — state-specific templates. If you have your own lease, we use that." },
   { q: 'How do payments work?', a: "We connect to your Stripe account. Application fees, deposits, and rent route to your bank — we never hold funds." },
@@ -337,31 +321,22 @@ const FAQS = [
 ];
 
 const FOUNDING = {
-  spotsTotal: 25,
-  spotsRemaining: 25,
+  spotsTotal: 10,
+  spotsRemaining: 10,
   tiers: [
     {
-      name: 'Host · Founding',
+      name: 'Founding Host',
       base: 'Host',
       yr1: 24.50,
       full: 49,
-      highlight: false,
-      cta: 'Claim a Host spot',
-      url: STRIPE_LINKS.foundingHost,
-    },
-    {
-      name: 'Portfolio · Founding',
-      base: 'Portfolio',
-      yr1: 49.50,
-      full: 99,
       highlight: true,
-      cta: 'Claim a Portfolio spot',
-      url: STRIPE_LINKS.foundingPortfolio,
+      cta: 'Claim a founding spot',
+      url: STRIPE_LINKS.foundingHost,
     },
   ],
   perks: [
-    { icon: '✦', text: '$199 setup fee waived entirely' },
-    { icon: '✦', text: '50% off for your first 12 months' },
+    { icon: '✦', text: '50% off setup — $249.50 instead of $499' },
+    { icon: '✦', text: '50% off monthly for your first 12 months' },
     { icon: '✦', text: 'Direct line to the founder' },
     { icon: '✦', text: 'Shape the product roadmap' },
   ],
@@ -712,7 +687,7 @@ function AnnouncementBanner() {
       }} />
       <span>
         <strong style={{ fontWeight: 700 }}>Founding Cohort:</strong>
-        {' '}First 25 hosts get 50% off for a full year + setup fee waived.{' '}
+        {' '}First 10 hosts get 50% off monthly for 12 months + 50% off setup ($249.50).{' '}
         <a href="#founding" style={{
           color: '#FFD166',
           fontWeight: 700,
@@ -767,18 +742,11 @@ function Nav() {
 
 function Logo() {
   return (
-    <div style={{
-      width: 26, height: 26, borderRadius: 6,
-      background: `linear-gradient(135deg, var(--accent) 0%, var(--accent-pressed) 100%)`,
-      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2,
-      padding: 5,
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)',
-    }}>
-      <span style={{ background: 'rgba(255,255,255,0.95)', borderRadius: 1 }} />
-      <span style={{ background: 'rgba(255,255,255,0.75)', borderRadius: 1 }} />
-      <span style={{ background: 'rgba(255,255,255,0.55)', borderRadius: 1 }} />
-      <span style={{ background: 'rgba(255,255,255,0.9)', borderRadius: 1 }} />
-    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="26" height="26" style={{ display: 'block' }}>
+      <rect x="0" y="0" width="48" height="48" rx="11" fill="#1F6FEB" />
+      <path d="M24 12 L38 24 L38 38 L10 38 L10 24 Z" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M20 38 L20 30 L28 30 L28 38" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -798,7 +766,7 @@ function Hero({ hostBrand }) {
           <a href="#founding" className="pill" style={{ marginBottom: 24, textDecoration: 'none', cursor: 'pointer' }}>
             <span className="dot" style={{ background: '#F5A623' }} />
             <span style={{ fontWeight: 600 }}>Founding Cohort open</span>
-            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 25 hosts · 50% off year 1</span>
+            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 hosts · 50% off year 1</span>
             <IconArrow size={12} />
           </a>
         </Reveal>
@@ -1056,8 +1024,8 @@ function Pricing({ cycle, onCycleChange }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 820, margin: '0 auto' }}>
           {/* Hidden pre-launch — re-enable when free tier is ready */}
           {/* <PriceCard tier={PRICING.free} annual={annual} /> */}
+          {/* Portfolio tier dropped 2026-05-08 — single tier only. */}
           <PriceCard tier={PRICING.host} annual={annual} />
-          <PriceCard tier={PRICING.portfolio} annual={annual} />
         </div>
       </div>
     </section>
@@ -1347,11 +1315,11 @@ function FoundingCohort() {
               fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05,
               marginBottom: 16,
             }}>
-              25 spots. Half the price.<br />
+              10 spots. Half the price.<br />
               <span style={{ color: 'var(--accent)' }}>Gone when they're gone.</span>
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto', lineHeight: 1.55 }}>
-              The first 25 hosts get 50% off for a full year, setup waived, and a direct line
+              The first 10 hosts get 50% off monthly for 12 months, $249.50 setup (50% off), and a direct line
               to the founder. In exchange, we ask for honest feedback and a testimonial.
             </p>
           </div>
@@ -1373,15 +1341,15 @@ function FoundingCohort() {
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>
               {filled === 0
-                ? 'All 25 spots still available'
+                ? 'All 10 spots still available'
                 : `${filled} of ${FOUNDING.spotsTotal} spots claimed`}
-              {' · '}Closes at 25 hosts or 90 days, whichever comes first
+              {' · '}Closes at 10 hosts or 90 days, whichever comes first
             </div>
           </div>
         </Reveal>
 
-        {/* Tier cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 820, margin: '0 auto 56px' }}>
+        {/* Tier cards — single tier as of 2026-05-08 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, maxWidth: 420, margin: '0 auto 56px' }}>
           {FOUNDING.tiers.map((t, i) => (
             <Reveal key={t.name} delay={i * 80}>
               <div style={{
@@ -1420,7 +1388,7 @@ function FoundingCohort() {
                     color: '#F5A623',
                     border: '1px solid rgba(245,166,35,0.3)',
                     padding: '2px 9px', borderRadius: 99,
-                  }}>Setup fee waived · save $199</div>
+                  }}>Setup 50% off · save $249.50</div>
                 </div>
 
                 <div style={{
@@ -1551,7 +1519,7 @@ function Chatbot() {
 
     const ctx = `You are the FurnishedPortal concierge on the FurnishedPortal landing page. FurnishedPortal is a SaaS for midterm rental hosts. Each host gets a branded website on their own domain, a client portal (applications, e-signed leases, rent payments), a live availability calendar, and an AI concierge trained on their FAQ.
 
-Pricing: Self-serve is $499 setup + $49/mo ($470/yr annual, 20% off). Done-for-you is $1,499 setup + $89/mo ($854/yr). No contracts, cancel anytime.
+Pricing: $499 one-time setup + $49/mo. Founding cohort (first 10 hosts only): 50% off both for the first 12 months — $249.50 setup + $24.50/mo for 12 months, then $49/mo. Promo code FOUNDING50. No contracts, cancel anytime.
 
 Founder: Afshin, a midterm rental host himself, based in Austin TX. Built for his own properties first. FurnishedPortal complements Furnished Finder — hosts still use FF to find leads, then send applicants to their FurnishedPortal site to apply and sign.
 
