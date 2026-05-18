@@ -296,7 +296,7 @@ const PRICING = {
     setup: 499,
     monthlyUrl: STRIPE_LINKS.hostMonthly,
     annualUrl:  STRIPE_LINKS.hostAnnual,
-    blurb: 'Your branded site on your own domain. One flat price, list as many units as you want.',
+    blurb: 'Your branded site on your own domain. $49/property per month — list multiple properties, each billed separately.',
     features: [
       'Custom domain or furnishedportal subdomain',
       'All full features',
@@ -335,8 +335,8 @@ const FOUNDING = {
     },
   ],
   perks: [
-    { icon: '✦', text: '$49/mo flat rate for life — price never increases' },
-    { icon: '✦', text: 'Locked in before any future price changes' },
+    { icon: '✦', text: '$49/property/mo — price locked for life, never increases' },
+    { icon: '✦', text: 'Setup fee 50% off — $249.50 instead of $499' },
     { icon: '✦', text: 'Direct line to the founder' },
     { icon: '✦', text: 'Shape the product roadmap' },
   ],
@@ -687,7 +687,7 @@ function AnnouncementBanner() {
       }} />
       <span>
         <strong style={{ fontWeight: 700 }}>Founding Cohort:</strong>
-        {' '}First 10 hosts get $49/mo flat rate for life — price locked in forever.{' '}
+        {' '}First 10 hosts: $49/property/mo locked for life + 50% off setup ($249.50).{' '}
         <a href="#founding" style={{
           color: '#FFD166',
           fontWeight: 700,
@@ -766,7 +766,7 @@ function Hero({ hostBrand }) {
           <a href="#founding" className="pill" style={{ marginBottom: 24, textDecoration: 'none', cursor: 'pointer' }}>
             <span className="dot" style={{ background: '#F5A623' }} />
             <span style={{ fontWeight: 600 }}>Founding Cohort open</span>
-            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 hosts · $49/mo for life</span>
+            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 hosts · $49/property · 50% off setup</span>
             <IconArrow size={12} />
           </a>
         </Reveal>
@@ -987,7 +987,7 @@ function Pricing({ cycle, onCycleChange }) {
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="pill" style={{ marginBottom: 16 }}><span className="dot" />Pricing</div>
             <h2 className="t-title-lg" style={{ marginBottom: 14 }}>Simple pricing. Cancel anytime.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 520, margin: '0 auto' }}>One setup fee. One flat monthly. No add-ons, no gotchas.</p>
+            <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 520, margin: '0 auto' }}>One setup fee. $49/property per month. No add-ons, no gotchas.</p>
 
             <div style={{
               marginTop: 28,
@@ -1065,7 +1065,7 @@ function PriceCard({ tier, annual }) {
       <div style={{ marginBottom: 24, paddingBottom: 24, borderBottom: h ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--stroke-strong)' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
           <span style={{ fontSize: 48, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>${monthly}</span>
-          <span style={{ fontSize: 15, color: h ? 'rgba(255,255,255,0.75)' : 'var(--ink-muted)' }}>/month</span>
+          <span style={{ fontSize: 15, color: h ? 'rgba(255,255,255,0.75)' : 'var(--ink-muted)' }}>/property/mo</span>
         </div>
         <div style={{ fontSize: 12, color: h ? 'rgba(255,255,255,0.72)' : 'var(--ink-muted)', marginTop: 6 }}>
           {isFree
@@ -1319,8 +1319,8 @@ function FoundingCohort() {
               <span style={{ color: 'var(--accent)' }}>Gone when they're gone.</span>
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto', lineHeight: 1.55 }}>
-              The first 10 hosts get $49/mo flat rate for life — price locked in forever, no matter what we
-              charge in the future. Plus a direct line to the founder and a say in the roadmap.
+              The first 10 hosts get $49/property/mo locked in for life, plus 50% off the setup fee —
+              $249.50 instead of $499. Price never increases, no matter what we charge in the future.
             </p>
           </div>
         </Reveal>
@@ -1376,10 +1376,10 @@ function FoundingCohort() {
                 <div style={{ marginBottom: 20 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
                     <span style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>${t.yr1}</span>
-                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>/mo · for life</span>
+                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>/property/mo · locked for life</span>
                   </div>
                   <div style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
-                    Price locked in forever — never goes up
+                    + $249.50 setup (50% off $499)
                   </div>
                   <div style={{
                     display: 'inline-block', marginTop: 8,
@@ -1388,7 +1388,7 @@ function FoundingCohort() {
                     color: '#F5A623',
                     border: '1px solid rgba(245,166,35,0.3)',
                     padding: '2px 9px', borderRadius: 99,
-                  }}>Flat rate for life · price locked</div>
+                  }}>Setup 50% off · save $249.50</div>
                 </div>
 
                 <div style={{
@@ -1511,7 +1511,7 @@ function Chatbot() {
 
     const ctx = `You are the FurnishedPortal concierge on the FurnishedPortal landing page. FurnishedPortal is a SaaS for midterm rental hosts. Each host gets a branded website on their own domain, a client portal (applications, e-signed leases, rent payments), a live availability calendar, and an AI concierge trained on their FAQ.
 
-Pricing: $499 one-time setup + $49/mo. Founding cohort (first 10 hosts only): $49/mo flat rate for life — price locked in forever, no matter what we charge in the future. No contracts, cancel anytime.
+Pricing: $499 one-time setup + $49/property/mo. Founding cohort (first 10 hosts only): $49/property/mo locked for life (price never increases) + setup fee 50% off ($249.50 instead of $499). No contracts, cancel anytime.
 
 Founder: Hoshang, a midterm rental host himself, based in Austin TX. Built for his own properties first. FurnishedPortal complements Furnished Finder — hosts still use FF to find leads, then send applicants to their FurnishedPortal site to apply and sign.
 
