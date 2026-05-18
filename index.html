@@ -327,7 +327,7 @@ const FOUNDING = {
     {
       name: 'Founding Host',
       base: 'Host',
-      yr1: 24.50,
+      yr1: 49,
       full: 49,
       highlight: true,
       cta: 'Claim a founding spot',
@@ -335,8 +335,8 @@ const FOUNDING = {
     },
   ],
   perks: [
-    { icon: '✦', text: '50% off setup — $249.50 instead of $499' },
-    { icon: '✦', text: '50% off monthly for your first 12 months' },
+    { icon: '✦', text: '$49/mo flat rate for life — price never increases' },
+    { icon: '✦', text: 'Locked in before any future price changes' },
     { icon: '✦', text: 'Direct line to the founder' },
     { icon: '✦', text: 'Shape the product roadmap' },
   ],
@@ -687,7 +687,7 @@ function AnnouncementBanner() {
       }} />
       <span>
         <strong style={{ fontWeight: 700 }}>Founding Cohort:</strong>
-        {' '}First 10 hosts get 50% off monthly for 12 months + 50% off setup ($249.50).{' '}
+        {' '}First 10 hosts get $49/mo flat rate for life — price locked in forever.{' '}
         <a href="#founding" style={{
           color: '#FFD166',
           fontWeight: 700,
@@ -766,7 +766,7 @@ function Hero({ hostBrand }) {
           <a href="#founding" className="pill" style={{ marginBottom: 24, textDecoration: 'none', cursor: 'pointer' }}>
             <span className="dot" style={{ background: '#F5A623' }} />
             <span style={{ fontWeight: 600 }}>Founding Cohort open</span>
-            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 hosts · 50% off year 1</span>
+            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 hosts · $49/mo for life</span>
             <IconArrow size={12} />
           </a>
         </Reveal>
@@ -1125,7 +1125,7 @@ function About() {
               [portrait of the founder]
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.015em', color: 'var(--ink)' }}>Afshin</div>
+              <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.015em', color: 'var(--ink)' }}>Hoshang</div>
               <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4 }}>Founder · MTR host · Austin, TX</div>
             </div>
           </div>
@@ -1319,8 +1319,8 @@ function FoundingCohort() {
               <span style={{ color: 'var(--accent)' }}>Gone when they're gone.</span>
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto', lineHeight: 1.55 }}>
-              The first 10 hosts get 50% off monthly for 12 months, $249.50 setup (50% off), and a direct line
-              to the founder. In exchange, we ask for honest feedback and a testimonial.
+              The first 10 hosts get $49/mo flat rate for life — price locked in forever, no matter what we
+              charge in the future. Plus a direct line to the founder and a say in the roadmap.
             </p>
           </div>
         </Reveal>
@@ -1376,10 +1376,10 @@ function FoundingCohort() {
                 <div style={{ marginBottom: 20 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
                     <span style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>${t.yr1}</span>
-                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>/mo · year 1</span>
+                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>/mo · for life</span>
                   </div>
                   <div style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
-                    then ${t.full}/mo list price after year 1
+                    Price locked in forever — never goes up
                   </div>
                   <div style={{
                     display: 'inline-block', marginTop: 8,
@@ -1388,7 +1388,7 @@ function FoundingCohort() {
                     color: '#F5A623',
                     border: '1px solid rgba(245,166,35,0.3)',
                     padding: '2px 9px', borderRadius: 99,
-                  }}>Setup 50% off · save $249.50</div>
+                  }}>Flat rate for life · price locked</div>
                 </div>
 
                 <div style={{
@@ -1432,15 +1432,7 @@ function FoundingCohort() {
                   marginTop: 10, fontSize: 12, color: 'rgba(255,255,255,0.62)',
                   textAlign: 'center', lineHeight: 1.4,
                 }}>
-                  At checkout, enter code{' '}
-                  <span style={{
-                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                    fontWeight: 700, color: 'white',
-                    background: 'rgba(245,166,35,0.18)',
-                    padding: '1px 6px', borderRadius: 4,
-                    letterSpacing: '0.04em',
-                  }}>FOUNDING50</span>
-                  {' '}to unlock 50% off
+                  No contracts. Cancel anytime. Price guaranteed for life.
                 </div>
               </div>
             </Reveal>
@@ -1519,9 +1511,9 @@ function Chatbot() {
 
     const ctx = `You are the FurnishedPortal concierge on the FurnishedPortal landing page. FurnishedPortal is a SaaS for midterm rental hosts. Each host gets a branded website on their own domain, a client portal (applications, e-signed leases, rent payments), a live availability calendar, and an AI concierge trained on their FAQ.
 
-Pricing: $499 one-time setup + $49/mo. Founding cohort (first 10 hosts only): 50% off both for the first 12 months — $249.50 setup + $24.50/mo for 12 months, then $49/mo. Promo code FOUNDING50. No contracts, cancel anytime.
+Pricing: $499 one-time setup + $49/mo. Founding cohort (first 10 hosts only): $49/mo flat rate for life — price locked in forever, no matter what we charge in the future. No contracts, cancel anytime.
 
-Founder: Afshin, a midterm rental host himself, based in Austin TX. Built for his own properties first. FurnishedPortal complements Furnished Finder — hosts still use FF to find leads, then send applicants to their FurnishedPortal site to apply and sign.
+Founder: Hoshang, a midterm rental host himself, based in Austin TX. Built for his own properties first. FurnishedPortal complements Furnished Finder — hosts still use FF to find leads, then send applicants to their FurnishedPortal site to apply and sign.
 
 Tone: warm, personal, confident. Short replies — 2 to 4 sentences max. If unknown, offer support@furnishedportal.com.`;
 
