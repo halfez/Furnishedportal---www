@@ -267,11 +267,11 @@ const STRIPE_LINKS = {
   hostMonthly:        'https://buy.stripe.com/28EeVe14w3o8ekd20G7Re05',
   hostAnnual:         'TODO_HOST_ANNUAL',
   // Founding Host: $49/mo + $499 setup, with FOUNDING50 prefilled — the 50% off
-  // applies to BOTH line items, so the customer pays $24.50/mo for 12 months
-  // and $249.50 setup once. After month 12 the monthly returns to $49.
+  // applies to setup fee ONLY (Duration=Once), so the customer pays $249.50 setup
+  // and $49/mo every month (no monthly discount). Coupon "Founding Host Discount"
+  // created 2026-05-20: 50% off, once, restricted to Setup Fee product, 10-redemption cap.
   // If prefill fails, allow_promotion_codes=true on the link lets the customer
-  // type FOUNDING50 at checkout. Coupon and promo code both capped at 10
-  // redemptions on Stripe's side (recreated 2026-05-09 from prior 25-cap).
+  // type FOUNDING50 at checkout.
   foundingHost:       'https://buy.stripe.com/dRmfZi14wf6Q0tnbBg7Re07?prefilled_promo_code=FOUNDING50',
 };
 
