@@ -86,7 +86,13 @@
   button { font: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; }
 
   .wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
-  @media (max-width: 720px) { .wrap { padding: 0 20px; } }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 20px; }
+    .nav-desktop-links { display: none !important; }
+    .nav-cta-desktop { display: none !important; }
+    .nav-hamburger { display: block !important; }
+    .nav-mobile-dropdown { border-radius: 0 0 10px 10px; }
+  }
 
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
@@ -247,7 +253,7 @@ const FEATURES = [
   { id: 'portal', title: 'Client portal', summary: "Applicants get accounts, fill applications, sign leases, and pay rent in one place.", bullet: 'E-sign + audit trail included.' },
   { id: 'calendar', title: 'Live availability', summary: "Real-time availability calendar your tenants can see before applying. No more back-and-forth to check dates.", bullet: 'Auto-updates on booking.' },
   { id: 'chatbot', title: 'AI concierge', summary: "Trained on your FAQ, amenities, and location. Answers guests so you don't have to repeat.", bullet: 'Forwards the weird ones.' },
-  { id: 'leases', title: 'Auto-generated leases', summary: "State-specific lease templates filled from the application. Signed, stored, sent - all in one place", bullet: 'Texas, California, NC, more.' },
+  { id: 'leases', title: 'Auto-generated leases', summary: "State-specific lease templates filled from the application. Signed, stored, sent — all in one place", bullet: 'Texas, California, NC, more.' },
   { id: 'payments', title: 'Stripe payments', summary: "Deposits, application fees, monthly rent — auto-charged, straight to your bank.", bullet: 'We never touch your money.' },
 ];
 
@@ -255,7 +261,7 @@ const STEPS = [
   { n: '1', title: 'Fill out the questionnaire', body: 'One intake form covers your brand, units, rents, amenities, and photos. About 30 minutes.' },
   { n: '2', title: 'We build your site', body: 'Our team designs a draft of your branded site based on your answers, tailored to your property.' },
   { n: '3', title: 'Review and approve', body: 'You review the draft, approve it, or propose changes. We revise until it feels like yours.' },
-  { n: '4', title: 'Your site goes live', body: 'Visitors can interact, see availability, apply, sign leases, and pay rent, etc. all in one place' },
+  { n: '4', title: 'Your site goes live', body: 'Visitors can interact, see availability, apply, sign leases, and pay rent, etc. all in one place.' },
 ];
 
 // Stripe Payment Links — LIVE MODE.
@@ -710,15 +716,29 @@ function AnnouncementBanner() {
 }
 
 // ================== NAV ==================
+const NAV_LINKS = [['Features','#features'],['How it works','#how'],['Pricing','#pricing'],['FAQ','#faq'],['About','#about']];
+
 function Nav() {
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!open) return;
+    function handleOutside(e) {
+      if (!e.target.closest('.nav-shell')) setOpen(false);
+    }
+    document.addEventListener('click', handleOutside);
+    return () => document.removeEventListener('click', handleOutside);
+  }, [open]);
+
   return (
-    <nav className="acrylic" style={{
+    <nav className="acrylic nav-shell" style={{
       position: 'sticky', top: 12, zIndex: 40,
       margin: '12px auto 0',
       maxWidth: 1280 - 24,
       borderRadius: 10,
       boxShadow: 'var(--shadow-4)',
     }}>
+      {/* Main bar */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         height: 52, padding: '0 12px 0 16px',
@@ -727,15 +747,54 @@ function Nav() {
           <Logo />
           <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: '-0.01em' }}>FurnishedPortal</div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {[['Features','#features'],['How it works','#how'],['Pricing','#pricing'],['FAQ','#faq'],['About','#about']].map(([l,h]) => (
+
+        {/* Desktop links — hidden below 720px */}
+        <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {NAV_LINKS.map(([l,h]) => (
             <a key={l} href={h} className="btn btn-subtle" style={{ fontWeight: 500, fontSize: 13 }}>{l}</a>
           ))}
         </div>
+
+        {/* Right side: Get started (desktop) + hamburger (mobile) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <a href="#pricing" className="btn btn-accent">Get started</a>
+          <a href="#pricing" className="btn btn-accent nav-cta-desktop">Get started</a>
+          <button
+            className="nav-hamburger"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            onClick={() => setOpen(o => !o)}
+            style={{
+              display: 'none', /* shown via CSS below 720px */
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontSize: 22, lineHeight: 1, padding: '4px 6px',
+              color: 'var(--ink)', borderRadius: 6,
+            }}
+          >☰</button>
         </div>
       </div>
+
+      {/* Mobile dropdown */}
+      {open && (
+        <div className="nav-mobile-dropdown" style={{
+          borderTop: '1px solid var(--stroke)',
+          padding: '8px 12px 12px',
+          display: 'flex', flexDirection: 'column', gap: 2,
+        }}>
+          {NAV_LINKS.map(([l,h]) => (
+            <a
+              key={l} href={h}
+              className="btn btn-subtle"
+              style={{ fontWeight: 500, fontSize: 14, justifyContent: 'flex-start' }}
+              onClick={() => setOpen(false)}
+            >{l}</a>
+          ))}
+          <a
+            href="#pricing" className="btn btn-accent"
+            style={{ marginTop: 6 }}
+            onClick={() => setOpen(false)}
+          >Get started</a>
+        </div>
+      )}
     </nav>
   );
 }
@@ -989,39 +1048,11 @@ function Pricing({ cycle, onCycleChange }) {
             <h2 className="t-title-lg" style={{ marginBottom: 14 }}>Simple pricing. Cancel anytime.</h2>
             <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 520, margin: '0 auto' }}>One setup fee. $49/property per month. No add-ons, no gotchas.</p>
 
-            <div style={{
-              marginTop: 28,
-              display: 'inline-flex', padding: 3,
-              background: 'var(--layer)', border: '1px solid var(--stroke-strong)',
-              borderRadius: 99,
-              boxShadow: 'var(--shadow-2)',
-            }}>
-              {['monthly','annual'].map(c => (
-                <button key={c} onClick={() => onCycleChange(c)} style={{
-                  padding: '7px 18px', borderRadius: 99,
-                  fontSize: 13, fontWeight: 600,
-                  background: cycle === c ? 'var(--accent)' : 'transparent',
-                  color: cycle === c ? 'white' : 'var(--ink-soft)',
-                  boxShadow: cycle === c ? 'inset 0 -1px 0 rgba(0,0,0,0.14)' : 'none',
-                  transition: 'all .15s var(--ease)',
-                  textTransform: 'capitalize',
-                }}>
-                  {c}
-                  {c === 'annual' && (
-                    <span style={{
-                      marginLeft: 8, fontSize: 10, fontWeight: 700,
-                      background: cycle === c ? 'rgba(255,255,255,0.22)' : 'var(--accent-soft)',
-                      color: cycle === c ? 'white' : 'var(--accent-ink)',
-                      padding: '1px 6px', borderRadius: 99,
-                    }}>Save 20%</span>
-                  )}
-                </button>
-              ))}
-            </div>
+            {/* Annual toggle hidden — annual Stripe link not wired up yet. Re-enable when hostAnnual URL is live. */}
           </div>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 820, margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, maxWidth: 420, margin: '0 auto' }}>
           {/* Hidden pre-launch — re-enable when free tier is ready */}
           {/* <PriceCard tier={PRICING.free} annual={annual} /> */}
           {/* Portfolio tier dropped 2026-05-08 — single tier only. */}
@@ -1046,15 +1077,6 @@ function PriceCard({ tier, annual }) {
       boxShadow: h ? 'var(--shadow-16)' : 'var(--shadow-4)',
       position: 'relative',
     }}>
-      {h && (
-        <div style={{
-          position: 'absolute', top: 16, right: 16,
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-          background: 'rgba(255,255,255,0.22)', color: 'white',
-          padding: '4px 10px', borderRadius: 99,
-          backdropFilter: 'blur(20px)',
-        }}>Most popular</div>
-      )}
       <div style={{
         fontSize: 13, fontWeight: 600,
         color: h ? 'rgba(255,255,255,0.85)' : 'var(--accent)',
@@ -1140,11 +1162,6 @@ function About() {
               <p>I was surprised to find that none of the STR or MTR platforms had the tools I needed. None of them fit. So I built FurnishedPortal for my own properties, then a friend, then a friend of a friend. It turns out most MTR hosts want the same thing: <span style={{ color: 'var(--ink)', fontWeight: 600 }}>a real website on their own domain, a portal for their tenants, and fewer texts at 11 p.m.</span></p>
               <p>If that's you — and you're tired of looking like a hobbyist when you're running a real business — I am here to help.</p>
             </div>
-            <div className="card" style={{ marginTop: 28, padding: 20, borderLeft: '3px solid var(--accent)' }}>
-              <div style={{ fontSize: 17, lineHeight: 1.4, fontWeight: 500, letterSpacing: '-0.005em' }}>
-                "Setup took an afternoon. My mind is at peace knowing I don't have to dig through my emails to find something. Everything is in one place."
-              </div>
-            </div>
           </div>
         </Reveal>
       </div>
@@ -1225,7 +1242,7 @@ function FinalCTA() {
             </p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, position: 'relative' }}>
-            <a href="#book" className="btn" style={{
+            <a href="https://calendly.com/genierents/mtr-research-call" target="_blank" rel="noopener noreferrer" className="btn" style={{
               padding: '12px 20px', fontSize: 14, justifyContent: 'center',
               background: 'white', color: 'var(--accent-pressed)', fontWeight: 600,
               boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.08)',
@@ -1256,8 +1273,8 @@ function Footer() {
           <span style={{ fontSize: 13, color: 'var(--ink-muted)' }}>FurnishedPortal · © 2026 · Made in Austin, TX</span>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
-          {['Privacy', 'Terms', 'Contact', 'Status'].map(l => (
-            <a key={l} href="#" className="btn btn-subtle" style={{ fontSize: 13, fontWeight: 500 }}>{l}</a>
+          {[['Privacy','/privacy'],['Terms','/terms'],['Contact','mailto:support@furnishedportal.com']].map(([l,h]) => (
+            <a key={l} href={h} className="btn btn-subtle" style={{ fontSize: 13, fontWeight: 500 }}>{l}</a>
           ))}
         </div>
       </div>

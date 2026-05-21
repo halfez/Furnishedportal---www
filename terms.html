@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Terms of Service — FurnishedPortal</title>
+<style>
+  :root {
+    --bg: #F3F3F3; --layer: #FBFBFB; --stroke: rgba(0,0,0,0.0578);
+    --ink: #1A1A1A; --ink-soft: #424242; --ink-muted: #616161;
+    --accent: #0067C0; --radius: 8px;
+    --shadow-2: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Segoe UI Variable', 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 15px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .nav {
+    position: sticky; top: 12px; z-index: 40;
+    max-width: calc(1280px - 24px); margin: 12px auto 0;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: saturate(150%) blur(30px);
+    -webkit-backdrop-filter: saturate(150%) blur(30px);
+    border: 1px solid var(--stroke); border-radius: 10px;
+    box-shadow: var(--shadow-2);
+    padding: 0 16px; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 600; letter-spacing: -0.01em;
+    color: var(--ink); text-decoration: none;
+  }
+  .nav-brand svg { flex-shrink: 0; }
+  .nav-back { font-size: 13px; color: var(--ink-muted); font-weight: 500; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 720px) { .wrap { padding: 0 20px; } }
+
+  .page { padding: 64px 0 96px; }
+
+  h1 { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 8px; }
+  .meta { font-size: 13px; color: var(--ink-muted); margin-bottom: 48px; }
+  h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; margin: 40px 0 12px; }
+  p { color: var(--ink-soft); margin-bottom: 14px; }
+  ul { color: var(--ink-soft); padding-left: 20px; margin-bottom: 14px; }
+  ul li { margin-bottom: 6px; }
+
+  .card {
+    background: var(--layer); border: 1px solid var(--stroke);
+    border-radius: var(--radius); box-shadow: var(--shadow-2);
+    padding: 20px 24px; margin-bottom: 14px;
+  }
+
+  footer {
+    border-top: 1px solid var(--stroke); padding: 24px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer span { font-size: 13px; color: var(--ink-muted); }
+  footer a { font-size: 13px; color: var(--ink-muted); }
+  footer a:hover { color: var(--ink); text-decoration: none; }
+  .footer-links { display: flex; gap: 20px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="24" height="24" rx="6" fill="#0067C0"/>
+      <path d="M5 13L12 7L19 13V19H15V15H9V19H5V13Z" fill="white"/>
+    </svg>
+    FurnishedPortal
+  </a>
+  <a href="/" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="page">
+  <div class="wrap">
+    <h1>Terms of Service</h1>
+    <p class="meta">Effective date: May 20, 2026 &nbsp;·&nbsp; Questions: <a href="mailto:support@furnishedportal.com">support@furnishedportal.com</a></p>
+
+    <p>These Terms of Service govern your use of FurnishedPortal ("the Service"), operated by FurnishedPortal ("we," "us," or "our"). By signing up or using the Service, you agree to these terms.</p>
+
+    <h2>What the Service is</h2>
+    <p>FurnishedPortal is a software platform that gives independent midterm rental hosts their own branded website, tenant application portal, live availability calendar, lease signing, and Stripe-powered rent collection — all on their own domain.</p>
+
+    <h2>Your account</h2>
+    <p>You must provide accurate information when signing up. You are responsible for keeping your login credentials secure and for all activity that occurs under your account. Notify us immediately at support@furnishedportal.com if you suspect unauthorized access.</p>
+
+    <h2>Pricing and billing</h2>
+    <ul>
+      <li><strong>Setup fee:</strong> A one-time fee of $499 (or $249.50 for Founding Host members) is charged at signup to cover site build and onboarding.</li>
+      <li><strong>Monthly subscription:</strong> $49 per property per month, billed to your card on file each month.</li>
+      <li><strong>Founding Host rate:</strong> If you joined as a Founding Host, your $49/property/mo rate is locked for the life of your account — it will never increase as long as you remain a customer.</li>
+      <li><strong>Multiple properties:</strong> Each additional property listed on your site is billed at the same monthly rate.</li>
+    </ul>
+    <p>All prices are in USD. We use Stripe to process payments. By providing payment information you authorize us to charge your card on a recurring monthly basis.</p>
+
+    <h2>Cancellation</h2>
+    <p>You may cancel at any time — no contracts, no cancellation fees. Your site stays live until the end of the current billing period. After that, your site and all associated data are deactivated. We retain your data for 30 days after cancellation in case you change your mind, then delete it.</p>
+
+    <h2>30-day money-back guarantee</h2>
+    <p>If you are unsatisfied within the first 30 days of service, contact us at support@furnishedportal.com and we will issue a full refund of your setup fee and any monthly charges paid. No questions asked.</p>
+
+    <h2>Your content</h2>
+    <p>You own all content you upload — property photos, descriptions, house rules, branding, and tenant data. You grant us a limited license to store and display that content solely for the purpose of operating the Service on your behalf. We will never use your content or your tenants' data for any other purpose.</p>
+
+    <h2>Acceptable use</h2>
+    <p>You agree not to use FurnishedPortal to:</p>
+    <ul>
+      <li>Violate any applicable law or regulation</li>
+      <li>Post false or misleading property listings</li>
+      <li>Collect tenant data you are not lawfully entitled to collect</li>
+      <li>Attempt to reverse-engineer or copy the platform</li>
+    </ul>
+    <p>We reserve the right to suspend or terminate accounts that violate these terms, with notice where practicable.</p>
+
+    <h2>Stripe payments (your tenants)</h2>
+    <p>Rent collection and application fees paid by your tenants flow directly to your connected Stripe account. FurnishedPortal does not hold or process those funds — we only connect your Stripe account to the platform. Stripe's terms apply to all payment processing.</p>
+
+    <h2>Limitation of liability</h2>
+    <p>FurnishedPortal is provided "as is." We are not liable for indirect, incidental, or consequential damages arising from your use of the platform, including lost revenue from downtime or data loss. Our total liability to you in any month is capped at the fees you paid us in that month.</p>
+
+    <h2>Changes to these terms</h2>
+    <p>We may update these terms from time to time. If the change is material, we will notify active customers by email at least 14 days before the change takes effect. Continued use of the Service after that date constitutes acceptance.</p>
+
+    <h2>Governing law</h2>
+    <p>These terms are governed by the laws of the State of Texas, without regard to conflict-of-law principles. Disputes will be resolved in the courts of Travis County, Texas.</p>
+
+    <h2>Contact</h2>
+    <div class="card">
+      <p style="margin:0">Questions about these terms? Email <a href="mailto:support@furnishedportal.com">support@furnishedportal.com</a>. We're a small team and will respond personally.</p>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>FurnishedPortal · © 2026 · Made in Austin, TX</span>
+    <div class="footer-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="mailto:support@furnishedportal.com">Contact</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
