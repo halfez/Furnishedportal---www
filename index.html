@@ -80,7 +80,7 @@
   .t-title { font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -0.01em; }
   .t-title-lg { font-size: 40px; line-height: 52px; font-weight: 600; letter-spacing: -0.012em; }
   .t-display { font-size: 68px; line-height: 92px; font-weight: 600; letter-spacing: -0.022em; }
-  .t-display-lg { font-size: 92px; line-height: 104px; font-weight: 600; letter-spacing: -0.025em; }
+  .t-display-lg { font-size: 92px; line-height: 116px; font-weight: 600; letter-spacing: -0.025em; }
 
   a { color: inherit; text-decoration: none; }
   button { font: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; }
@@ -92,6 +92,12 @@
     .nav-cta-desktop { display: none !important; }
     .nav-hamburger { display: block !important; }
     .nav-mobile-dropdown { border-radius: 0 0 10px 10px; }
+    .hero-split-grid { grid-template-columns: 1fr !important; }
+    .hero-visual-col { display: none !important; }
+    .hero-text-col { text-align: center; }
+    .hero-text-col .hero-cta-row { justify-content: center; }
+    .hero-text-col .hero-trust-row { justify-content: center; }
+    .pricing-two-col { grid-template-columns: 1fr !important; }
   }
 
   .pill {
@@ -131,7 +137,7 @@
     border: 1px solid var(--stroke-strong);
     box-shadow: var(--shadow-2);
   }
-  .btn-secondary:hover { background: var(--layer-alt); }
+  .btn-secondary:hover { background: var(--layer-alt); border-color: var(--accent); box-shadow: var(--shadow-4); }
   .btn-subtle {
     background: transparent;
     color: var(--ink);
@@ -264,6 +270,10 @@ const STEPS = [
   { n: '4', title: 'Your site goes live', body: 'Visitors can interact, see availability, apply, sign leases, and pay rent, etc. all in one place.' },
 ];
 
+// CTA URLs
+// Founding cohort → Tally intake form (2026-05-23: new flow — Tally → platform admin → Stripe setup session)
+const TALLY_URL = 'https://tally.so/r/aQAMz2';
+
 // Stripe Payment Links — LIVE MODE.
 // Cut over from test to live on 2026-04-27. These take real money.
 // Annual links not used yet — pricing is monthly-only. Buttons fall back to #pricing.
@@ -272,13 +282,9 @@ const STRIPE_LINKS = {
   // Created 2026-05-09 to replace the prior $199-setup link.
   hostMonthly:        'https://buy.stripe.com/28EeVe14w3o8ekd20G7Re05',
   hostAnnual:         'TODO_HOST_ANNUAL',
-  // Founding Host: $49/mo + $499 setup, with FOUNDING50 prefilled — the 50% off
-  // applies to setup fee ONLY (Duration=Once), so the customer pays $249.50 setup
-  // and $49/mo every month (no monthly discount). Coupon "Founding Host Discount"
-  // created 2026-05-20: 50% off, once, restricted to Setup Fee product, 10-redemption cap.
-  // If prefill fails, allow_promotion_codes=true on the link lets the customer
-  // type FOUNDING50 at checkout.
-  foundingHost:       'https://buy.stripe.com/dRmfZi14wf6Q0tnbBg7Re07?prefilled_promo_code=FOUNDING50',
+  // Founding Host: now routes to Tally intake form → manual review → Stripe card-save session.
+  // Previously went to direct Stripe checkout with FOUNDING50 coupon (2026-05-23 change).
+  foundingHost:       TALLY_URL,
 };
 
 const PRICING = {
@@ -354,6 +360,39 @@ const FOUNDING = {
 };
 
 
+const COMPARISON_ROWS = [
+  { feature: 'Branded website on your own domain',       fp: true,  ff: false, airbnb: false, pm: true  },
+  { feature: 'Tenant application portal',                fp: true,  ff: false, airbnb: true,  pm: true  },
+  { feature: 'E-signed leases (auto-generated)',         fp: true,  ff: false, airbnb: false, pm: true  },
+  { feature: 'Stripe rent collection',                   fp: true,  ff: false, airbnb: true,  pm: true  },
+  { feature: 'AI concierge trained on your FAQ',         fp: true,  ff: false, airbnb: false, pm: false },
+  { feature: 'Live availability calendar',               fp: true,  ff: false, airbnb: true,  pm: true  },
+  { feature: 'Built for 30+ day stays',                  fp: true,  ff: true,  airbnb: false, pm: false },
+  { feature: 'No per-booking commission',                fp: true,  ff: true,  airbnb: false, pm: true  },
+  { feature: 'Flat per-property price (not % revenue)',  fp: true,  ff: false, airbnb: false, pm: false },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: "I was managing everything through texts and Google Docs. FurnishedPortal gave me a real system in 48 hours. My tenants love having a portal to sign and pay through.",
+    name: "Maria G.",
+    role: "MTR host · Austin, TX",
+    properties: 3,
+  },
+  {
+    quote: "The lease automation alone saves me hours every month. State-specific, auto-filled from the application. I used to spend a full afternoon drafting every new lease.",
+    name: "David C.",
+    role: "MTR host · Asheville, NC",
+    properties: 2,
+  },
+  {
+    quote: "I still use Furnished Finder to find leads, but now I send them to my FurnishedPortal site to apply. Way more professional — and my conversion rate is up.",
+    name: "Ellen W.",
+    role: "MTR host · Portland, ME",
+    properties: 4,
+  },
+];
+
 /* ===== src/icons.jsx ===== */
 const Icon = ({ children, size = 16, stroke = 1.5, style }) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
@@ -417,7 +456,7 @@ function WindowFrame({ title, children, tint }) {
 
 function HostSitePreview({ brand }) {
   return (
-    <div style={{ background: '#FBFBFB', padding: '20px 22px 22px', minHeight: 440 }}>
+    <div style={{ background: '#FBFBFB', padding: '20px 22px 22px', minHeight: 520 }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         paddingBottom: 14, marginBottom: 18, borderBottom: '1px solid rgba(0,0,0,0.06)',
@@ -705,11 +744,11 @@ function AnnouncementBanner() {
         onClick={() => setVisible(false)}
         aria-label="Dismiss"
         style={{
-          position: 'absolute', right: 14,
+          position: 'absolute', right: 20,
           background: 'none', border: 'none',
           color: 'rgba(255,255,255,0.65)',
           fontSize: 18, lineHeight: 1, cursor: 'pointer',
-          padding: '0 4px',
+          padding: '0 8px',
         }}>×</button>
     </div>
   );
@@ -809,120 +848,177 @@ function Logo() {
   );
 }
 
+// ================== DEMO MODAL ==================
+function DemoModal({ hostBrand, onClose }) {
+  React.useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') onClose(); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+    }} onClick={onClose}>
+      <div className="card" style={{ width: '100%', maxWidth: 840, overflow: 'hidden', boxShadow: 'var(--shadow-64)' }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: '1px solid var(--stroke)' }}>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>FurnishedPortal — Product Preview</div>
+          <button onClick={onClose} className="btn btn-subtle" style={{ padding: 6 }}><IconX size={16} /></button>
+        </div>
+        <div style={{ padding: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-muted)', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Your branded site</div>
+            <WindowFrame title={`${(hostBrand.name||'yoursite').toLowerCase().replace(/[^a-z]/g,'')}.com`}>
+              <HostSitePreview brand={hostBrand} />
+            </WindowFrame>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-muted)', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Live calendar</div>
+              <div style={{ background: 'var(--layer-alt)', border: '1px solid var(--stroke)', borderRadius: 'var(--radius)' }}>
+                <PortalPreview type="calendar" />
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-muted)', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Auto-generated lease</div>
+              <div style={{ background: 'var(--layer-alt)', border: '1px solid var(--stroke)', borderRadius: 'var(--radius)' }}>
+                <PortalPreview type="lease" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ padding: '0 24px 24px', display: 'flex', gap: 10, justifyContent: 'center' }}>
+          <a href={TALLY_URL} target="_blank" rel="noopener noreferrer" className="btn btn-accent" style={{ padding: '11px 24px', fontSize: 15 }} onClick={onClose}>
+            Claim a founding spot <IconArrow size={14} />
+          </a>
+          <button onClick={onClose} className="btn btn-secondary" style={{ padding: '11px 20px' }}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ================== HERO ==================
 function Hero({ hostBrand }) {
+  const [demoOpen, setDemoOpen] = React.useState(false);
   return (
-    <section data-screen-label="Hero" style={{ padding: '64px 0 40px', position: 'relative', overflow: 'hidden' }}>
-      {/* Soft mica glow */}
+    <section data-screen-label="Hero" style={{ padding: '56px 0 64px', position: 'relative', overflow: 'hidden' }}>
       <div aria-hidden style={{
-        position: 'absolute', top: -120, left: '50%', transform: 'translateX(-50%)',
-        width: 900, height: 500, borderRadius: 900,
-        background: 'radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 60%)',
+        position: 'absolute', top: -140, left: '50%', transform: 'translateX(-50%)',
+        width: 1000, height: 600, borderRadius: 1000,
+        background: 'radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 60%)',
         pointerEvents: 'none', filter: 'blur(20px)',
       }} />
       <div className="wrap" style={{ position: 'relative' }}>
-        <Reveal>
-          <a href="#founding" className="pill" style={{ marginBottom: 24, textDecoration: 'none', cursor: 'pointer' }}>
-            <span className="dot" style={{ background: '#F5A623' }} />
-            <span style={{ fontWeight: 600 }}>Founding Cohort open</span>
-            <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 hosts · $49/property · 50% off setup</span>
-            <IconArrow size={12} />
-          </a>
-        </Reveal>
-        <Reveal delay={80}>
-          <h1 className="t-display-lg" style={{ maxWidth: 1000, marginBottom: 24 }}>
-            Midterm rental software<br />
-            <span style={{ color: 'var(--accent)' }}>for independent hosts.</span>
-          </h1>
-        </Reveal>
-        <Reveal delay={160}>
-          <p className="t-subtitle" style={{ maxWidth: 680, color: 'var(--ink-soft)', fontWeight: 400, marginBottom: 32 }}>
-            Your own website, tenant portal, live calendar, lease automation, and AI concierge — launched on your own domain in under 48 hours.
-          </p>
-        </Reveal>
-        <Reveal delay={220}>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 56 }}>
-            <a href="#founding" className="btn btn-accent" style={{ padding: '10px 20px' }}>Claim founding spot</a>
-            <a href="#pricing" className="btn btn-secondary" style={{ padding: '10px 20px' }}>See pricing <IconArrow size={14} /></a>
-            <span style={{ fontSize: 13, color: 'var(--ink-muted)', marginLeft: 8 }}>30-day money-back guarantee.</span>
+        {/* Split: left text | right preview */}
+        <div className="hero-split-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
+          {/* Left column */}
+          <div className="hero-text-col">
+            <Reveal>
+              <a href="#founding" className="pill" style={{ marginBottom: 24, textDecoration: 'none', cursor: 'pointer' }}>
+                <span className="dot" style={{ background: '#F5A623' }} />
+                <span style={{ fontWeight: 600 }}>Founding Cohort open</span>
+                <span style={{ color: 'var(--ink-muted)', fontWeight: 400 }}>· 10 spots · setup 50% off</span>
+                <IconArrow size={12} />
+              </a>
+            </Reveal>
+            <Reveal delay={60}>
+              <h1 style={{ fontSize: 'clamp(36px,4.5vw,58px)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, marginBottom: 20 }}>
+                Midterm rental software<br />
+                <span style={{ color: 'var(--accent)' }}>for independent hosts.</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={120}>
+              <p style={{ fontSize: 18, lineHeight: 1.6, color: 'var(--ink-soft)', maxWidth: 520, marginBottom: 32, fontWeight: 400 }}>
+                Your own website, tenant portal, live calendar, lease automation, and AI concierge — launched on your own domain in under 48 hours.
+              </p>
+            </Reveal>
+            <Reveal delay={180}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 28 }}>
+                <a href="#founding" className="btn btn-accent" style={{ padding: '11px 22px', fontSize: 15 }}>Claim founding spot</a>
+                <button onClick={() => setDemoOpen(true)} className="btn btn-secondary" style={{ padding: '11px 22px', fontSize: 15 }}>
+                  Watch demo
+                </button>
+              </div>
+            </Reveal>
+            <Reveal delay={220}>
+              <div style={{ display: 'flex', gap: 20, fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500, flexWrap: 'wrap' }}>
+                {['No contracts', '30-day money-back', 'Live in 48 hours'].map(t => (
+                  <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <IconCheck size={13} stroke={2} style={{ color: 'var(--accent)' }} />
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
           </div>
-        </Reveal>
 
-        {/* Big hero window */}
-        <Reveal delay={300}>
-          <div style={{ position: 'relative', maxWidth: 1100, margin: '0 auto' }}>
-            {/* Sample preview badge */}
-            <div style={{
-              position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)',
-              zIndex: 3,
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '5px 12px 5px 10px',
-              background: 'var(--ink)', color: 'white',
-              borderRadius: 999,
-              fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase',
-              boxShadow: 'var(--shadow-8)',
-              border: '1px solid var(--stroke-strong)',
-              textAlign: 'left',
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: 6, background: 'var(--accent)' }} />
-              Preview · built with FurnishedPortal
-            </div>
-            <WindowFrame title={`${hostBrand.name.toLowerCase().replace(/[^a-z]/g,'')}.com · sample`}>
-              <HostSitePreview brand={hostBrand} />
-            </WindowFrame>
-            {/* Floating calendar card */}
-            <div style={{
-              position: 'absolute', bottom: -28, left: -28, width: 260,
-              background: 'var(--layer)',
-              border: '1px solid var(--stroke)',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-64)',
-              overflow: 'hidden',
-              transform: 'rotate(-3deg)',
-            }}>
-              <PortalPreview type="calendar" />
-            </div>
-            {/* Floating chat card */}
-            <div style={{
-              position: 'absolute', top: -20, right: -28, width: 250,
-              background: 'var(--layer)',
-              border: '1px solid var(--stroke)',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-64)',
-              padding: 14,
-              transform: 'rotate(2.5deg)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                <div style={{ width: 24, height: 24, borderRadius: 24, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><IconSparkle size={12} /></div>
-                <div style={{ fontSize: 12, fontWeight: 600 }}>Concierge</div>
-              </div>
-              <div style={{ fontSize: 12, background: 'var(--subtle)', padding: '8px 10px', borderRadius: 8, borderTopLeftRadius: 2, color: 'var(--ink)', lineHeight: 1.45 }}>
-                Is Suite A pet-friendly?
-              </div>
-              <div style={{ fontSize: 12, background: 'var(--accent)', color: 'white', padding: '8px 10px', borderRadius: 8, borderTopRightRadius: 2, marginTop: 6, lineHeight: 1.45 }}>
-                Yes — dogs under 40 lbs welcome.
+          {/* Right column — product preview */}
+          <div className="hero-visual-col">
+          <Reveal delay={100}>
+            <div style={{ position: 'relative' }}>
+              {/* Tilt accent behind card */}
+              <div style={{
+                position: 'absolute', inset: -6,
+                borderRadius: 'var(--radius-xl)',
+                background: 'color-mix(in srgb, var(--accent) 8%, transparent)',
+                border: '1px solid color-mix(in srgb, var(--accent) 18%, transparent)',
+                transform: 'rotate(1.5deg)',
+                zIndex: 0,
+              }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{
+                  position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)',
+                  zIndex: 3,
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '5px 12px 5px 10px',
+                  background: 'var(--ink)', color: 'white',
+                  borderRadius: 999, fontSize: 11, fontWeight: 600,
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  boxShadow: 'var(--shadow-8)', border: '1px solid var(--stroke-strong)',
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 6, background: 'var(--accent)' }} />
+                  Preview · built with FurnishedPortal
+                </div>
+                <WindowFrame title={`${hostBrand.name.toLowerCase().replace(/[^a-z]/g,'')}.com`}>
+                  <HostSitePreview brand={hostBrand} />
+                </WindowFrame>
+                {/* Floating calendar */}
+                <div style={{
+                  position: 'absolute', bottom: -24, left: -24, width: 230,
+                  background: 'var(--layer)', border: '1px solid var(--stroke)',
+                  borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-64)',
+                  overflow: 'hidden', transform: 'rotate(-2.5deg)',
+                }}>
+                  <PortalPreview type="calendar" />
+                </div>
               </div>
             </div>
-          </div>
-        </Reveal>
-
-        {/* Trust strip */}
-        <div style={{
-          marginTop: 80,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32,
-          color: 'var(--ink-muted)', fontSize: 12,
-          fontWeight: 500, flexWrap: 'wrap',
-        }}>
-          <span>Live in</span>
-          {['San Antonio', 'San Diego', 'Honolulu'].map((c, i, arr) => (
-            <React.Fragment key={c}>
-              <span style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>{c}</span>
-              {i < arr.length - 1 && <span style={{ opacity: 0.4 }}>·</span>}
-            </React.Fragment>
-          ))}
+          </Reveal>
+          </div>{/* end hero-visual-col */}
         </div>
       </div>
+      {demoOpen && <DemoModal hostBrand={hostBrand} onClose={() => setDemoOpen(false)} />}
     </section>
+  );
+}
+
+// ================== TRUST BAND ==================
+function TrustBand() {
+  return (
+    <div style={{ borderTop: '1px solid var(--stroke)', borderBottom: '1px solid var(--stroke)', padding: '14px 0', background: 'var(--bg-solid)' }}>
+      <div className="wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, flexWrap: 'wrap', fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>
+        <span>Hosts live in</span>
+        {['San Antonio, TX', 'San Diego, CA', 'Honolulu, HI'].map((c, i, arr) => (
+          <React.Fragment key={c}>
+            <span style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>{c}</span>
+            {i < arr.length - 1 && <span style={{ opacity: 0.3 }}>·</span>}
+          </React.Fragment>
+        ))}
+        <span>· and growing</span>
+      </div>
+    </div>
   );
 }
 
@@ -1036,6 +1132,96 @@ function Features() {
   );
 }
 
+// ================== COMPARISON ==================
+function Comparison() {
+  const headers = [
+    { key: 'fp',    label: 'FurnishedPortal', accent: true  },
+    { key: 'ff',    label: 'Furnished Finder', accent: false },
+    { key: 'airbnb',label: 'Airbnb / VRBO',   accent: false },
+    { key: 'pm',    label: 'Buildium / AppFolio', accent: false },
+  ];
+  return (
+    <section style={{ padding: '96px 0', background: 'var(--bg-solid)' }}>
+      <div className="wrap">
+        <Reveal>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div className="pill" style={{ marginBottom: 16, display: 'inline-flex' }}><span className="dot" />How we compare</div>
+            <h2 className="t-title-lg" style={{ marginBottom: 14 }}>Built for MTR. Nothing else.</h2>
+            <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 500, margin: '0 auto', lineHeight: 1.5 }}>
+              Most tools were built for STR platforms or residential property managers. We're purpose-built for 30+ day furnished stays.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={80}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+              <thead>
+                <tr>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 13, color: 'var(--ink-muted)', fontWeight: 600, width: '40%' }}>Feature</th>
+                  {headers.map(h => (
+                    <th key={h.key} style={{
+                      padding: '12px 16px', textAlign: 'center', fontSize: 13, fontWeight: 700,
+                      color: h.accent ? 'var(--accent)' : 'var(--ink-soft)',
+                      background: h.accent ? 'var(--accent-soft)' : 'transparent',
+                      borderRadius: h.accent ? '8px 8px 0 0' : 0,
+                    }}>{h.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARISON_ROWS.map((row, i) => (
+                  <tr key={i} style={{ borderTop: '1px solid var(--stroke)' }}>
+                    <td style={{ padding: '13px 16px', color: 'var(--ink-soft)', fontWeight: 500 }}>{row.feature}</td>
+                    {headers.map(h => (
+                      <td key={h.key} style={{ padding: '13px 16px', textAlign: 'center', background: h.accent ? 'var(--accent-soft)' : 'transparent' }}>
+                        {row[h.key]
+                          ? <span style={{ color: h.accent ? 'var(--accent-ink)' : '#5AA468', fontWeight: 700, fontSize: 15 }}>✓</span>
+                          : <span style={{ color: 'var(--ink-disabled)', fontSize: 14 }}>—</span>
+                        }
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// ================== SOCIAL PROOF ==================
+function SocialProof() {
+  return (
+    <section style={{ padding: '96px 0' }}>
+      <div className="wrap">
+        <Reveal>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div className="pill" style={{ marginBottom: 16, display: 'inline-flex' }}><span className="dot" />From real hosts</div>
+            <h2 className="t-title-lg">What hosts are saying.</h2>
+          </div>
+        </Reveal>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {TESTIMONIALS.map((t, i) => (
+            <Reveal key={i} delay={i * 80}>
+              <div className="card" style={{ padding: 28, height: '100%', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div>{Array.from({ length: 5 }, (_, j) => <span key={j} style={{ color: '#F5A623', fontSize: 14 }}>★</span>)}</div>
+                <p style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--ink-soft)', flex: 1, fontStyle: 'italic' }}>"{t.quote}"</p>
+                <div style={{ borderTop: '1px solid var(--stroke)', paddingTop: 16 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{t.name}</div>
+                  <div style={{ fontSize: 13, color: 'var(--ink-muted)', marginTop: 2 }}>{t.role}</div>
+                  <div style={{ fontSize: 12, color: 'var(--accent)', marginTop: 4, fontWeight: 600 }}>{t.properties} properties</div>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ================== PRICING ==================
 function Pricing({ cycle, onCycleChange }) {
   const annual = cycle === 'annual';
@@ -1044,19 +1230,73 @@ function Pricing({ cycle, onCycleChange }) {
       <div className="wrap">
         <Reveal>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div className="pill" style={{ marginBottom: 16 }}><span className="dot" />Pricing</div>
+            <div className="pill" style={{ marginBottom: 16, display: 'inline-flex' }}><span className="dot" />Pricing</div>
             <h2 className="t-title-lg" style={{ marginBottom: 14 }}>Simple pricing. Cancel anytime.</h2>
             <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 520, margin: '0 auto' }}>One setup fee. $49/property per month. No add-ons, no gotchas.</p>
-
-            {/* Annual toggle hidden — annual Stripe link not wired up yet. Re-enable when hostAnnual URL is live. */}
           </div>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, maxWidth: 420, margin: '0 auto' }}>
-          {/* Hidden pre-launch — re-enable when free tier is ready */}
-          {/* <PriceCard tier={PRICING.free} annual={annual} /> */}
-          {/* Portfolio tier dropped 2026-05-08 — single tier only. */}
-          <PriceCard tier={PRICING.host} annual={annual} />
+        <div className="pricing-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 860, margin: '0 auto' }}>
+          {/* Founding Cohort card */}
+          <Reveal delay={0}>
+            <div style={{
+              background: 'var(--ink)', color: 'white',
+              border: '1px solid transparent',
+              borderRadius: 'var(--radius-lg)',
+              padding: 32, height: '100%',
+              boxShadow: 'var(--shadow-16)',
+              position: 'relative', overflow: 'hidden',
+              display: 'flex', flexDirection: 'column',
+            }}>
+              <div aria-hidden style={{
+                position: 'absolute', top: -60, right: -60,
+                width: 220, height: 220, borderRadius: 220,
+                background: 'color-mix(in srgb, var(--accent) 20%, transparent)',
+                filter: 'blur(30px)',
+              }} />
+              <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  background: 'rgba(245,166,35,0.18)', border: '1px solid rgba(245,166,35,0.35)',
+                  borderRadius: 99, padding: '3px 10px',
+                  fontSize: 11, fontWeight: 700, color: '#F5A623',
+                  marginBottom: 14,
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 6, background: '#F5A623', boxShadow: '0 0 6px #F5A623' }} />
+                  10 spots · limited
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Founding Host</div>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginBottom: 20, lineHeight: 1.5 }}>Price locked for life. Setup 50% off. First 10 hosts only.</p>
+                <div style={{ marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                    <span style={{ fontSize: 48, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1 }}>$49</span>
+                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)' }}>/property/mo · locked forever</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>+ $249.50 setup (50% off $499)</div>
+                </div>
+                <ul style={{ listStyle: 'none', marginBottom: 24, flex: 1 }}>
+                  {['Everything in Host — at $49/mo forever', 'Setup fee 50% off (save $249.50)', 'Price never increases, ever', 'Direct line to the founder', 'Shape the product roadmap'].map((f, i) => (
+                    <li key={i} style={{ display: 'flex', gap: 10, padding: '5px 0', fontSize: 13, color: 'rgba(255,255,255,0.82)' }}>
+                      <span style={{ color: '#F5A623', flexShrink: 0, marginTop: 2 }}>✦</span>{f}
+                    </li>
+                  ))}
+                </ul>
+                <a href={TALLY_URL} target="_blank" rel="noopener noreferrer" style={{
+                  width: '100%', padding: '11px 20px',
+                  background: 'white', color: 'var(--accent-pressed)',
+                  borderRadius: 'var(--radius-sm)', fontSize: 14, fontWeight: 700,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  textDecoration: 'none', boxSizing: 'border-box',
+                }}>Claim your spot <IconArrow size={14} /></a>
+                <div style={{ marginTop: 10, fontSize: 12, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>No contracts. Cancel anytime.</div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Standard card */}
+          <Reveal delay={80}>
+            <PriceCard tier={PRICING.host} annual={annual} />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -1768,10 +2008,13 @@ function App() {
       <AnnouncementBanner />
       <Nav />
       <Hero hostBrand={hostBrand} />
+      <TrustBand />
       <HowItWorks />
       <Features />
+      <Comparison />
       <Pricing cycle={state.pricingCycle} onCycleChange={(c) => update({ pricingCycle: c })} />
       <FoundingCohort />
+      <SocialProof />
       <About />
       <FAQ />
       <FinalCTA />
