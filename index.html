@@ -795,5 +795,33 @@ react-dom/cjs/react-dom.production.min.js:
    *)
 */
 </script>
+<!-- FP-PAYMENT-FIX (2026-05-24, Tech Coach): re-wire conversion CTAs.
+     Founding -> Tally application (pay nothing today). Standard -> Stripe checkout.
+     Nav/Hero/"try the live demo" buttons are intentionally left to scroll/open-demo.
+     To revert: delete this entire <script> block. -->
+<script>
+(function(){
+  var TALLY  = 'https://tally.so/r/aQAMz2';
+  var STRIPE = 'https://buy.stripe.com/3cI6oI6oQf6Q3Fzaxc7Re08';
+  function go(u){ return window.open(u, '_blank', 'noopener,noreferrer'); }
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    var btn = (t && t.closest) ? t.closest('button') : null;
+    if(!btn) return;
+    var txt = (btn.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
+    var dest = null;
+    var card = btn.closest('.price');
+    if(card){
+      if(card.classList.contains('founding')) dest = TALLY;
+      else if(card.classList.contains('standard')) dest = STRIPE;
+    }
+    if(!dest && btn.closest('.final-cta') && txt.indexOf('demo') === -1) dest = TALLY;
+    if(!dest && txt.indexOf('join the founding cohort') !== -1) dest = TALLY;
+    if(!dest && btn.closest('.modal') && (txt.indexOf('founding') !== -1 || txt.indexOf('claim') !== -1)) dest = TALLY;
+    if(dest){ e.preventDefault(); e.stopImmediatePropagation(); go(dest); }
+  }, true);
+})();
+</script>
+
 </body>
 </html>
